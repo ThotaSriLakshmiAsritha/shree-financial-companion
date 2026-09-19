@@ -4,7 +4,15 @@ from pathlib import Path
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
+def _find_repo_root() -> Path:
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if (parent / ".git").exists() or (parent / ".env").exists():
+            return parent
+    return current.parents[3] if len(current.parents) > 3 else current.parent
+
+
+REPOSITORY_ROOT = _find_repo_root()
 
 
 class Settings(BaseSettings):
@@ -14,7 +22,14 @@ class Settings(BaseSettings):
     api_port: int = 8000
     log_level: str = "INFO"
     database_url: str = "sqlite:///./sahachari.db"
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: list[str] = [
+        "*",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        "http://localhost:3000",
+    ]
     supabase_project_ref: str | None = None
     supabase_url: str | None = None
     supabase_publishable_key: str | None = None
@@ -45,7 +60,13 @@ class Settings(BaseSettings):
     sarvam_agent_tool_key: str | None = None
 
     model_config = SettingsConfigDict(
-        env_file=(REPOSITORY_ROOT / ".env", REPOSITORY_ROOT / ".env.local"),
+        env_file=(
+            REPOSITORY_ROOT / ".env",
+            REPOSITORY_ROOT / ".env.local",
+            Path(__file__).resolve().parents[3] / ".env",
+            Path(__file__).resolve().parents[2] / ".env",
+            Path.cwd() / ".env",
+        ),
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,

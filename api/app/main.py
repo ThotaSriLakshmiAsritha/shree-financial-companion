@@ -27,6 +27,13 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting %s in %s mode", settings.app_name, settings.app_env)
+    try:
+        from app.db.base import Base
+        from app.db.session import engine
+        import app.auth.models, app.financial.models, app.context.models, app.privacy.models, app.voice.models  # noqa: F401
+        Base.metadata.create_all(bind=engine)
+    except Exception as exc:
+        logger.warning("Auto table creation skipped or failed: %s", exc)
     yield
     logger.info("Stopping %s", settings.app_name)
 
