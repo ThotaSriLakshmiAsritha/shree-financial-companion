@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm --prefix shree_frontend run build",
+  "outputDirectory": "shree_frontend/dist",
+  "installCommand": "npm --prefix shree_frontend install",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
