@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     exotel_account_sid: str | None = None
     exotel_base_url: str = "https://api.in.exotel.com"
     exotel_webhook_secret: str | None = None
-    exotel_exophone: str | None = None
+    exotel_exophone: str | None = "+914045902294"
     sarvam_api_key: str | None = None
     sarvam_base_url: str = "https://api.sarvam.ai"
     sarvam_stt_model: str = "saaras:v3"

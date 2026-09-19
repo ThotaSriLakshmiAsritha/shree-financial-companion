@@ -78,7 +78,7 @@ const translations = {
 }
 
 const slides = [warliHero1, warliHero2, warliHero3, warliHero4, warliHero5]
-const companionPhoneNumber = '+9140455903507'
+const companionPhoneNumber = '+914045902294'
 const dynamicNextStepCopy = {
   te: ({ savings, remaining, goalName, hasGoal }) => hasGoal
     ? <>ఈ నెల మీరు <strong>{formatMoney(savings)}</strong> పొదుపు చేశారు.<br />మీ {goalName} లక్ష్యానికి <strong>మరో {formatMoney(remaining)}</strong> దూరంలో ఉన్నారు.</>
