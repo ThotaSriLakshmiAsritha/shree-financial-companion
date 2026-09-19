@@ -72,6 +72,16 @@ async def observe_request_latency(request, call_next):
             ok=ok,
             label=f"{request.method} {route_name}",
         )
+@app.get("/")
+def root():
+    return {
+        "status": "ok",
+        "service": settings.app_name,
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(context_router)
