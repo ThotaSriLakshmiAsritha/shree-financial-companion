@@ -368,6 +368,20 @@ function AuthPanel({ t, language, setLanguage }) {
 
   const normalizedEmail = email.trim()
 
+  useEffect(() => {
+    try {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+      const searchParams = new URLSearchParams(window.location.search)
+      const errorDesc = hashParams.get('error_description') || searchParams.get('error_description')
+      if (errorDesc) {
+        setError(decodeURIComponent(errorDesc.replace(/\+/g, ' ')))
+        window.history.replaceState(null, '', window.location.pathname)
+      }
+    } catch {
+      // Ignore URL parsing errors
+    }
+  }, [])
+
   const submit = async (event) => {
     event.preventDefault()
     if (!supabase) return
@@ -398,7 +412,11 @@ function AuthPanel({ t, language, setLanguage }) {
     if (!supabase) return
     setBusy(true)
     setError('')
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } })
+    const redirectUrl = window.location.origin + window.location.pathname
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: redirectUrl }
+    })
     if (oauthError) { setError(oauthError.message || t.authError); setBusy(false) }
   }
 
