@@ -30,11 +30,15 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5174",
         "http://localhost:3000",
     ]
-    supabase_project_ref: str | None = None
-    supabase_url: str | None = None
-    supabase_publishable_key: str | None = None
-    supabase_anon_key: str | None = None
-    supabase_service_role_key: str | None = None
+    supabase_project_ref: str | None = "oqknqbpaqpwjimpngnyx"
+    supabase_url: str | None = "https://oqknqbpaqpwjimpngnyx.supabase.co"
+    supabase_publishable_key: str | None = "sb_publishable_okzDXNucTtH9UMT2KMMpWQ_ukCCmweG"
+    supabase_anon_key: str | None = (
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xa25xYnBhcXB3amltcG5nbnl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MzU1ODAsImV4cCI6MjEwNTMxMTU4MH0.j2FICCBLxfeo48Cqe8SsLMVTMIDcD1n1p_FF9_0q5Os"
+    )
+    supabase_service_role_key: str | None = (
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xa25xYnBhcXB3amltcG5nbnl4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4OTczNTU4MCwiZXhwIjoyMTA1MzExNTgwfQ.hAOFHBqFnZQYDT4hNbsQMBVNK5fkvh3mEjqkFhlYGWY"
+    )
     supabase_database_url_template: str | None = None
     google_client_id: str | None = None
     google_client_secret: str | None = None
@@ -71,6 +75,23 @@ class Settings(BaseSettings):
         extra="ignore",
         case_sensitive=False,
     )
+
+    @field_validator("supabase_url", mode="before")
+    @classmethod
+    def normalize_supabase_url(cls, value: object) -> object:
+        if isinstance(value, str):
+            cleaned = value.strip().strip("'").strip('"')
+            if cleaned and not cleaned.startswith(("http://", "https://")):
+                return f"https://{cleaned}"
+            return cleaned.rstrip("/") if cleaned else cleaned
+        return value
+
+    @field_validator("supabase_anon_key", "supabase_service_role_key", mode="before")
+    @classmethod
+    def clean_supabase_keys(cls, value: object) -> object:
+        if isinstance(value, str):
+            return value.strip().strip("'").strip('"')
+        return value
 
     @field_validator("cors_origins", mode="before")
     @classmethod
