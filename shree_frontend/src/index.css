@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Rokkitt:wght@500;600;700&display=swap');
+
+:root { font-family: 'Noto Sans Telugu', sans-serif; color: #5A3928; background: #F7F0E3; font-synthesis: none; text-rendering: optimizeLegibility; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; width: 100%; background: #F7F0E3; }
+button, a { font: inherit; }
+button { cursor: pointer; }
